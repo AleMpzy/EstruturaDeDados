@@ -60,6 +60,7 @@ void RemoverFLista(no **L){
     free(P);
 }
 
+
 void RemoverCLista(no **L){
     if(*L == NULL)
         printf("Lista vazia!");

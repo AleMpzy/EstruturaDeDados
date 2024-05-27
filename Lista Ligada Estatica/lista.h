@@ -31,3 +31,5 @@ void ImprimirLista(Lista *L);
 int BuscarElemento(Lista *L, TipoChave ch);
 
 bool InserirElemento(Lista *L, Registro r);
+
+bool ExcluirElemento(Lista *L, TipoChave ch);

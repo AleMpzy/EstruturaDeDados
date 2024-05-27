@@ -11,22 +11,22 @@ int main() {
     InserirCLista(&l, 10);
 
     printf("\n  Lista apos insercoes: ");
-    PercorrerLista(l);
+    PercorrerLista(&l);
 
     InserirCLista(&l, 7);
 
     printf("\n Lista apos insercao no comeco: ");
-    PercorrerLista(l);
+    PercorrerLista(&l);
 
     RemoverFLista(&l);
 
     printf("\n Lista apos remocao no final: ");
-    PercorrerLista(l);
+    PercorrerLista(&l);
 
     RemoverCLista(&l);
 
     printf("\n Lista apos remocao no comeco: ");
-    PercorrerLista(l);
+    PercorrerLista(&l);
     
     return 0;
 }

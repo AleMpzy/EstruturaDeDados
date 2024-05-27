@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define inv -1
-
 typedef struct NoTag{
     int chave;
     struct NoTag *prox;

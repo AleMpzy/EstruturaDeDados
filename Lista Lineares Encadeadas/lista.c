@@ -7,7 +7,7 @@ void IniciarLista(no **L){
 }
 
 void PercorrerLista(no **L){
-    no *P = L;
+    no *P = *L;
 
     while(P != NULL){
         printf("\n %d", P->chave);

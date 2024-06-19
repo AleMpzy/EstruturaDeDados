@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "lista.h"
 
 void IniciarLista(no **L){
@@ -59,7 +57,6 @@ void RemoverFLista(no **L){
     ant->prox = NULL;
     free(P);
 }
-
 
 void RemoverCLista(no **L){
     if(*L == NULL)

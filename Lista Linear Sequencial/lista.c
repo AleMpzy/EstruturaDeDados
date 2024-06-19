@@ -1,6 +1,5 @@
 
 #include "lista.h"
-#include <stdio.h>
 
 void Iniciar(Lista *L) {
     L->N = 0;

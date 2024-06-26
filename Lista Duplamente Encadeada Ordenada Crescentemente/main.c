@@ -6,29 +6,21 @@ int main(){
     no* l = NULL;
     IniciarLista(&l);
 
-    InserirFinal(&l, 10);
-    InserirFinal(&l, 22);
-    InserirFinal(&l, 47);
-    printf("Lista apos insercoes no final:");
+    InserirChave(&l, 10);
+    InserirChave(&l, 22);
+    InserirChave(&l, 47);
+    printf("Lista apos insercoes de 10, 22 e 47:");
     ImprimirLista(&l);
 
-    InserirInicio(&l, 7);
-    InserirInicio(&l, 1);
-    printf("\nLista apos insercoes no inicio:");
+    InserirChave(&l, 7);
+    InserirChave(&l, 1);
+    printf("\nLista apos insercoes de 7 e 1:");
     ImprimirLista(&l);
 
     printf("\nTamanho da lista: %d", RetornarTamanho(&l));
 
     BuscarChave(&l, 22);
     BuscarChave(&l, 40);
-
-    RemoverFinal(&l);
-    printf("\nLista apos remover final:");
-    ImprimirLista(&l);
-
-    RemoverInicio(&l);
-    printf("\nLista apos remover inicio:");
-    ImprimirLista(&l);
 
     RemoverChave(&l, 22);
     printf("\nLista apos remover chave:");

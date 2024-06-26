@@ -25,21 +25,30 @@ void ImprimirLista(no **L){
     }
 }
 
-void InserirChave(no **L, int chave){ // todo (refazer)
-    no *P = *L;
-    no *N = (no *) malloc (sizeof(no));
-
+void InserirChave(no **L, int chave){ 
+     no *N = (no *) malloc (sizeof(no));
     N->chave = chave;
     N->prox = NULL;
+    N->ant = NULL;
 
     if(*L == NULL){ 
         *L = N;
-        N->ant = NULL;
+    }
+    else if(chave < (*L)->chave){
+        N->prox = *L;
+        (*L)->ant = N;
+        *L = N;
     }
     else{
-        while(P->prox != NULL)
+        no *P = *L;
+        while(P->prox != NULL && P->prox->chave < chave){
             P = P->prox;
-        P->prox = N; 
+        }
+        N->prox = P->prox;
+        if(P->prox != NULL){
+            P->prox->ant = N;
+        }
+        P->prox = N;
         N->ant = P;
     }
 }

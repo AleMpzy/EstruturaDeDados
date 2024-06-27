@@ -26,7 +26,7 @@ void ImprimirLista(no **L){
 }
 
 void InserirChave(no **L, int chave){ 
-     no *N = (no *) malloc (sizeof(no));
+    no *N = (no *) malloc (sizeof(no));
     N->chave = chave;
     N->prox = NULL;
     N->ant = NULL;

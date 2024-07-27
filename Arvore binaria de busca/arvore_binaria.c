@@ -1,185 +1,133 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "arvore_binaria.h"
 
-No getnode(){
-    No p;
-    p = (No)malloc(sizeof(No));
+Node* getNode(){
+    Node* p = (Node*)malloc(sizeof(Node));
     return p;
 }
 
-No vazia(){
-    return NULL;
-}
-
-No criarArvore(int chave){
-    No raiz;
-    raiz = getnode();
-    raiz->info = chave;
-    raiz->esquerda = NULL;
-    raiz->direita = NULL;
+Node* inserir(Node* raiz, int chave){
+    if(raiz == NULL){
+        Node* novo = getNode();
+        novo->chave = chave;
+        novo->esquerda = novo->direita = novo->pai = NULL;
+        return novo;
+    }
+    if(chave < raiz->chave){
+        Node* esquerda = inserir(raiz->esquerda, chave);
+        raiz->esquerda = esquerda;
+        if(esquerda != NULL) 
+            esquerda->pai = raiz;
+    }
+    else if(chave > raiz->chave){
+        Node* direita = inserir(raiz->direita, chave);
+        raiz->direita = direita;
+        if(direita != NULL) 
+            direita->pai = raiz;
+    }
     return raiz;
 }
 
-No inserir(No* raiz, int valor){
-    if(*raiz == NULL){
-        *raiz = criarArvore(valor);
-    } 
-    else{
-        if(valor < (*raiz)->info){
-            if((*raiz)->esquerda == NULL){
-                (*raiz)->esquerda = criarArvore(valor);
-                (*raiz)->esquerda->pai = *raiz;
-            } 
-            else
-                inserir(&((*raiz)->esquerda), valor);
-        } 
-        else{
-            if((*raiz)->direita == NULL){
-                (*raiz)->direita = criarArvore(valor);
-                (*raiz)->direita->pai = *raiz;
-            } 
-            else
-                inserir(&((*raiz)->direita), valor);
-        }
-    }
-}
-
-No busca_chave(No raiz, int chave){
-    if(raiz == NULL || raiz->info == chave)
+Node* buscar_chave(Node* raiz, int chave){
+    if(raiz == NULL || raiz->chave == chave)
         return raiz;
-    else if(chave < raiz->info)
-        return busca_chave(raiz->esquerda, chave);
-    else
-        return busca_chave(raiz->direita, chave);
+    if(chave < raiz->chave)
+        return buscar_chave(raiz->esquerda, chave);
+
+    return buscar_chave(raiz->direita, chave);
 }
 
-void remover(No* raiz, int valor){
-    No nodo = busca_chave(*raiz, valor);
-    if(nodo != NULL){
-        if(nodo->esquerda == NULL && nodo->direita == NULL){
-            if(nodo->pai != NULL){
-                if(nodo->pai->esquerda == nodo){
-                    nodo->pai->esquerda = NULL;
-                } 
-                else{
-                    nodo->pai->direita = NULL;
-                }
-            } 
-            else 
-                *raiz = NULL;
-
-            free(nodo);
-        } 
-        else if(nodo->esquerda == NULL){
-            if(nodo->pai != NULL){
-                if(nodo->pai->esquerda == nodo)
-                    nodo->pai->esquerda = nodo->direita;
-                else 
-                    nodo->pai->direita = nodo->direita;
-            } 
-            else
-                *raiz = nodo->direita;
-
-            free(nodo);
+Node* remover(Node* raiz, int chave){
+    if(raiz == NULL)
+        return raiz;
+    if(chave < raiz->chave){
+        raiz->esquerda = remover(raiz->esquerda, chave);
+    } 
+    else if(chave > raiz->chave)
+        raiz->direita = remover(raiz->direita, chave);
+    else{
+        if(raiz->esquerda == NULL){
+            Node* temp = raiz->direita;
+            free(raiz);
+            return temp;
         }
-        else if(nodo->direita == NULL){
-            if(nodo->pai != NULL){
-                if(nodo->pai->esquerda == nodo){
-                    nodo->pai->esquerda = nodo->esquerda;
-                } 
-                else{
-                    nodo->pai->direita = nodo->esquerda;
-                }
-            } 
-            else
-                *raiz = nodo->esquerda;
-
-            free(nodo);
-        } 
-        else{
-            No menor = nodo->direita;
-            while(menor->esquerda != NULL){
-                menor = menor->esquerda;
-            }
-            nodo->info = menor->info;
-            remover(&(nodo->direita), menor->info);
+        else if(raiz->direita == NULL){
+            Node* temp = raiz->esquerda;
+            free(raiz);
+            return temp;
         }
+        Node* temp = minimo(raiz->direita);
+        raiz->chave = temp->chave;
+        raiz->direita = remover(raiz->direita, temp->chave);
     }
+    return raiz;
 }
 
-void pre_ordem(No raiz){
+void pre_ordem(Node* raiz){
     if(raiz != NULL){
-        printf("%d ", raiz->info);
+        printf("%d ", raiz->chave);
         pre_ordem(raiz->esquerda);
         pre_ordem(raiz->direita);
     }
 }
 
-void em_ordem(No raiz){
+void em_ordem(Node* raiz){
     if(raiz != NULL){
         em_ordem(raiz->esquerda);
-        printf("%d ", raiz->info);
+        printf("%d ", raiz->chave);
         em_ordem(raiz->direita);
     }
 }
 
-void pos_ordem(No raiz){
+void pos_ordem(Node* raiz){
     if(raiz != NULL){
         pos_ordem(raiz->esquerda);
         pos_ordem(raiz->direita);
-        printf("%d ", raiz->info);
+        printf("%d ", raiz->chave);
     }
 }
 
-No predecessor(No raiz, int chave){
-    No nodo = busca_chave(raiz, chave);
-    if(nodo != NULL){
-        if(nodo->esquerda != NULL)
-            return nodo->esquerda;
-        else{
-            No pai = nodo->pai;
-            while(pai != NULL && pai->esquerda == nodo){
-                nodo = pai;
-                pai = pai->pai;
-            }
-            return pai;
-        }
+Node* predecessor(Node* n){
+    if(n->esquerda != NULL){
+        Node* atual = n->esquerda;
+        while(atual && atual->direita != NULL)
+            atual = atual->direita;
+        return atual;
     }
-    return NULL;
+    Node* pred = n->pai;
+    while(pred != NULL && n == pred->esquerda){
+        n = pred;
+        pred = pred->pai;
+    }
+    return pred;
 }
 
-No sucessor(No raiz, int chave){
-    No nodo = busca_chave(raiz, chave);
-    if(nodo != NULL){
-        if(nodo->direita != NULL)
-            return nodo->direita;
-        else{
-            No pai = nodo->pai;
-            while(pai != NULL && pai->direita == nodo){
-                nodo = pai;
-                pai = pai->pai;
-            }
-            return pai;
-        }
+Node* sucessor(Node* n) {
+    if(n->direita != NULL){
+        Node* atual = n->direita;
+        while(atual && atual->esquerda != NULL)
+            atual = atual->esquerda;
+        return atual;
     }
-    return NULL;
+    Node* suc = n->pai;
+    while(suc != NULL && n == suc->direita){
+        n = suc;
+        suc = suc->pai;
+    }
+    return suc;
 }
 
-No maximo(No raiz){
-    if(raiz == NULL)
-        return NULL;
-    No nodo = raiz;
-    while(nodo->direita != NULL){
-        nodo = nodo->direita;
-    }
-    return nodo;
+Node* maximo(Node* raiz){
+    Node* atual = raiz;
+    while(atual && atual->direita != NULL)
+        atual = atual->direita;
+    return atual;
 }
 
-No minimo(No raiz){
-    if(raiz == NULL)
-        return NULL;
-    No nodo = raiz;
-    while(nodo->esquerda != NULL){
-        nodo = nodo->esquerda;
-    }
-    return nodo;
+Node* minimo(Node* raiz){
+    Node* atual = raiz;
+    while(atual && atual->esquerda != NULL)
+        atual = atual->esquerda;
+    return atual;
 }
